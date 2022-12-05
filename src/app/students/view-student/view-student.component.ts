@@ -34,6 +34,9 @@ export class ViewStudentComponent implements OnInit {
     }
   };
 
+  isNewStudent = false;
+  header = '';
+
   genderList : Gender[] = [];
 
   constructor(private readonly studentService: StudentService,
@@ -43,13 +46,21 @@ export class ViewStudentComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe({
-      next: (success) => {
-      this.studentId = success.get('id');
+      next: (success) => { this.studentId = success.get('id');
 
         if (this.studentId){
-          this.studentService.getStudent(this.studentId).subscribe({
-            next: (succesRes) => this.student = succesRes
-          });
+
+          if (this.studentId.toLowerCase() === 'Add'.toLowerCase()){
+            this.isNewStudent = true;
+            this.header = 'Add new Student';
+          }else{
+            this.isNewStudent = false;
+            this.header = 'Edit Student';
+
+            this.studentService.getStudent(this.studentId).subscribe({
+              next: (succesRes) => this.student = succesRes
+            });
+          }
 
           this.genderService.getGenderList()
           .subscribe({
@@ -79,6 +90,19 @@ export class ViewStudentComponent implements OnInit {
 
         setTimeout(() => {
           this.router.navigateByUrl('students');
+        }, 2000);
+      },
+      error: err => err
+    })
+  }
+
+  onAdd(): void{
+    this.studentService.addStudent(this.student).subscribe({
+      next: success => {
+        this.snackBar.open('Student added successfully', undefined, {duration: 2000});
+        
+        setTimeout(() => {
+          this.router.navigateByUrl(`students/${success.id}`);
         }, 2000);
       },
       error: err => err
