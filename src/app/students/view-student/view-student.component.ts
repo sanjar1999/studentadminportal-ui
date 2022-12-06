@@ -36,6 +36,7 @@ export class ViewStudentComponent implements OnInit {
 
   isNewStudent = false;
   header = '';
+  displayProfileImageUrl: string = '';
 
   genderList : Gender[] = [];
 
@@ -53,12 +54,17 @@ export class ViewStudentComponent implements OnInit {
           if (this.studentId.toLowerCase() === 'Add'.toLowerCase()){
             this.isNewStudent = true;
             this.header = 'Add new Student';
+            this.setImage();
           }else{
             this.isNewStudent = false;
             this.header = 'Edit Student';
 
             this.studentService.getStudent(this.studentId).subscribe({
-              next: (succesRes) => this.student = succesRes
+              next: (succesRes) => {
+                this.student = succesRes;
+                this.setImage();
+              },
+              error: err => {this.setImage()}
             });
           }
 
@@ -107,5 +113,28 @@ export class ViewStudentComponent implements OnInit {
       },
       error: err => err
     })
+  }
+
+  private setImage(): void{
+    if (this.student.profileImageUrl){
+      this.displayProfileImageUrl = this.studentService.getImagePath(this.student.profileImageUrl);
+    } else {
+      this.displayProfileImageUrl = '/assets/user_icon.png';
+    }
+  }
+
+  uploadImage(event: any): void {
+    if (this.studentId){
+      const file: File = event.target.files[0];
+      this.studentService.uploadImage(this.student.id, file).subscribe({
+        next: success => {
+          this.student.profileImageUrl = success;
+          this.setImage();
+
+          this.snackBar.open('Profile image updated successfully', undefined, {duration: 2000});
+        },
+        error: err => err
+      });
+    }
   }
 }
