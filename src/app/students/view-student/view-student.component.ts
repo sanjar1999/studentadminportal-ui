@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Gender } from 'src/app/models/ui-models/gender.model';
@@ -40,6 +41,8 @@ export class ViewStudentComponent implements OnInit {
 
   genderList : Gender[] = [];
 
+  @ViewChild('studentDetailsForm') studentDetailsForm?: NgForm;
+
   constructor(private readonly studentService: StudentService,
     private readonly route: ActivatedRoute, private genderService: GenderService,
     private snackBar: MatSnackBar, private router: Router){}
@@ -79,14 +82,17 @@ export class ViewStudentComponent implements OnInit {
   }
 
   onUpdate(): void{
-    this.studentService.updateStudent(this.student.id, this.student).subscribe({
-      next: (success) => {
-        this.snackBar.open('Student Updated Successfully', undefined, {
-        duration: 2000
-      })
-      },
-      error: err => err
-    });
+    if (this.studentDetailsForm?.form.valid) {
+      this.studentService.updateStudent(this.student.id, this.student).subscribe({
+        next: (success) => {
+          this.snackBar.open('Student Updated Successfully', undefined, {
+          duration: 2000
+        })
+        },
+        error: err => err
+      });
+    }
+    
   }
 
   onDelete(): void{
@@ -103,6 +109,8 @@ export class ViewStudentComponent implements OnInit {
   }
 
   onAdd(): void{
+
+   if (this.studentDetailsForm?.form.valid) {
     this.studentService.addStudent(this.student).subscribe({
       next: success => {
         this.snackBar.open('Student added successfully', undefined, {duration: 2000});
@@ -111,8 +119,9 @@ export class ViewStudentComponent implements OnInit {
           this.router.navigateByUrl(`students/${success.id}`);
         }, 2000);
       },
-      error: err => err
+      error: err => console.log(err)
     })
+   }
   }
 
   private setImage(): void{

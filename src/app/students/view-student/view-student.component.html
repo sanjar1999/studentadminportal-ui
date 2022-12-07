@@ -25,7 +25,9 @@
                 matInput
                 [(ngModel)]="student.firstName"
                 name="firstName"
+                required
               />
+              <mat-error>Please fill this field</mat-error>
             </mat-form-field>
           </div>
           <div class="col-xs-6">
@@ -36,7 +38,9 @@
                 matInput
                 [(ngModel)]="student.lastName"
                 name="lastName"
+                required
               />
+              <mat-error>Please fill this field</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -50,11 +54,13 @@
                 [matDatepicker]="picker"
                 [(ngModel)]="student.dateOfBirth"
                 name="dateOfBirth"
+                required
               />
               <mat-datepicker-toggle
                 matSuffix
                 [for]="picker"
               ></mat-datepicker-toggle>
+              <mat-error>Please fill this field</mat-error>
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
           </div>
@@ -69,7 +75,9 @@
                 matInput
                 [(ngModel)]="student.email"
                 name="email"
+                required
               />
+              <mat-error>Please fill this field</mat-error>
             </mat-form-field>
           </div>
           <div class="col-xs-6">
@@ -80,7 +88,9 @@
                 matInput
                 [(ngModel)]="student.mobile"
                 name="mobile"
+                required
               />
+              <mat-error>Please fill this field</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -88,13 +98,14 @@
           <div class="col-xs-12">
             <mat-form-field appearance="outline">
               <mat-label>Gender</mat-label>
-              <mat-select [(ngModel)]="student.genderId" name="gender">
+              <mat-select [(ngModel)]="student.genderId" name="gender" required>
                 <mat-option
                   *ngFor="let gender of genderList"
                   [value]="gender.id"
                   >{{ gender.description }}</mat-option
                 >
               </mat-select>
+              <mat-error>Please fill this field</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -106,7 +117,9 @@
                 matInput
                 [(ngModel)]="student.address.physicalAddress"
                 name="physicalAddress"
+                required
               ></textarea>
+              <mat-error>Please fill this field</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -118,7 +131,9 @@
                 matInput
                 [(ngModel)]="student.address.postalAddress"
                 name="postalAddress"
+                required
               ></textarea>
+              <mat-error>Please fill this field</mat-error>
             </mat-form-field>
           </div>
         </div>
